@@ -1,6 +1,6 @@
 # Alerta!
 
-Na pasta Apps/ tem apps perigosos, eles podem conter:
+Na pasta BannedApps/ tem apps perigosos, eles podem conter:
 
 
 * Adware
