@@ -1,0 +1,34 @@
+name: Bot Trabalhador Silencioso
+on:
+  push:
+    paths:
+      - 'Perfs/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Impede que o bot entre em loop infinito (ele não reage aos próprios commits)
+    if: github.actor != 'github-actions[bot]' 
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Organizar Pastas
+        run: |
+          cd Perfs
+          for d in */; do
+            if [ -d "$d" ] && [ ! -d "${d}Apps" ]; then
+              mkdir -p "${d}Apps"
+              touch "${d}Apps/.gitkeep"
+            fi
+          done
+
+      - name: Commit Silencioso
+        run: |
+          git config --global user.name "CyniBot"
+          git config --global user.email "bot@cynistore.com"
+          git add .
+          # O '[skip ci]' na mensagem avisa o GitHub para não rodar o bot de novo
+          git diff --staged --quiet || (git commit -m "chore: auto-setup perfs [skip ci]" && git push)
+          
